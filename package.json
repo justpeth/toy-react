@@ -1,0 +1,23 @@
+{
+  "name": "toy-react",
+  "version": "1.0.0",
+  "description": "toy-react",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justpeth/toy-react.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/justpeth/toy-react/issues"
+  },
+  "homepage": "https://github.com/justpeth/toy-react#readme",
+  "devDependencies": {
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
+  }
+}
