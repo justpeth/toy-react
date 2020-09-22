@@ -12,7 +12,7 @@ export default class Component {
     this.props[name] = value
   }
   appendChild(component) {
-    this.childNodes.push(component)
+    this.children.push(component)
   }
   [RENDER_TO_DOM](range) {
     this._range = range;
@@ -37,6 +37,6 @@ export default class Component {
     }
 
     merge(this.state, newState);
-    this.render();
+    this.reRender();
   }
 }

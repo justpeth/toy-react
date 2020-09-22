@@ -2,13 +2,13 @@ import { ElementWrapper, TextWrapper } from './wrapper'
 
 const insertChildren = (children, element) => {
   for (let child of children) {
-    if (typeof children === 'string') {
+    if (typeof child === 'string') {
       child = new TextWrapper(child)
     }
     if (child === null) {
       continue
     }
-    if (typeof children === 'object' && child instanceof Array) {
+    if (typeof child === 'object' && child instanceof Array) {
       insertChildren(child, element)
     } else {
       element.appendChild(child)
@@ -17,17 +17,13 @@ const insertChildren = (children, element) => {
 }
 
 const createElement = (type, attributes, ...children) => {
-
-  let e = typeof type === 'string' ? new ElementWrapper(type) : new type;
-  console.log(e)
-  debugger;
+  let element = typeof type === 'string' ? new ElementWrapper(type) : new type;
   for (let p in attributes) {
-    e.setAttribute(p, attributes[p])
+    element.setAttribute(p, attributes[p])
   }
+  insertChildren(children, element);
 
-  insertChildren(children, e);
-
-  return e;
+  return element;
 }
 
 export default createElement;

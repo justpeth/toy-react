@@ -20,10 +20,11 @@ class App extends ToyReact.Component {
       <div>
         <div>{a.toString()}</div>
         <div>{b.toString()}</div>
-        <button onClick={buttonClickHandle}></button>
+        <button onClick={this.buttonClickHandle}></button>
       </div>
     )
   }
 }
 
 export default App;
+
