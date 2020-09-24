@@ -1,4 +1,4 @@
-import { isNullOrObject, merge } from './utils'
+import { isNullOrObject, merge, update } from './utils'
 import { RENDER_TO_DOM } from './constant'
 
 export default class Component {
@@ -8,6 +8,9 @@ export default class Component {
     this._root = null;
     this._range = null;
   }
+  get vDom () {
+    return this.render().vDom;
+  }
   setAttribute(name, value) {
     this.props[name] = value
   }
@@ -16,17 +19,14 @@ export default class Component {
   }
   [RENDER_TO_DOM](range) {
     this._range = range;
-    this.render()[RENDER_TO_DOM](range)
+    this._vDom = this.vDom;
+    this._vDom[RENDER_TO_DOM](range)
   }
-  reRender() {
-    let oldRange = this._range;
-    let range = document.createRange();
-    range.setStart(oldRange.startContainer, oldRange.startOffset);
-    range.setEnd(oldRange.startContainer, oldRange.startOffset);
-    this[RENDER_TO_DOM](range);
 
-    oldRange.setStart(range.endContainer, range.endOffset);
-    oldRange.deleteContents();
+  update() {
+    let vDom = this.vDom;
+    update(this._vDom, vDom)
+    this._vDom = vDom;
   }
 
   setState(newState) {
@@ -37,6 +37,6 @@ export default class Component {
     }
 
     merge(this.state, newState);
-    this.reRender();
+    this.update();
   }
 }

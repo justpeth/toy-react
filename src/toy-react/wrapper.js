@@ -1,42 +1,51 @@
 import { RENDER_TO_DOM } from './constant'
+import { replaceContent, setRootAttributes } from './utils'
+import Component from './component';
+export class ElementWrapper extends Component {
+  constructor(type) {
+    super(type);
+    this.type = type;
+  }
 
-export class ElementWrapper {
-  constructor(tagName) {
-    this.root = document.createElement(tagName)
+  get vDom() {
+    this.vChildren = this.children.map(child => child.vDom);
+    return this;
   }
-  setAttribute(name, value) {
-    // 绑定事件
-    if (name.match(/^on([\s\S]+)$/)) {
-      let eventName = RegExp.$1.replace(/^[\s\S]/, c => c.toLocaleLowerCase())
-      this.root.addEventListener(eventName, value);
-      return;
-    }
-    // 设置类名
-    if (name === 'className') {
-      this.root.setAttribute('class', value)
-      return;
-    }
-    // 普通attributes设置
-    this.root.setAttribute(name, value)
-  }
-  appendChild(component) {
-    let range = document.createRange();
-    range.setStart(this.root, this.root.childNodes.length)
-    range.setEnd(this.root, this.root.childNodes.length)
-    component[RENDER_TO_DOM](range)
-  }
+
   [RENDER_TO_DOM](range) {
-    range.deleteContents();
-    range.insertNode(this.root);
+    this._range = range;
+    let root = document.createElement(this.type)
+
+    setRootAttributes(root, this.props);
+
+    if (!this.vChildren) {
+      this.vChildren = this.children.map(child => child.vDom)
+    }
+
+    for (let child of this.vChildren) {
+      let childRange = document.createRange()
+      childRange.setStart(root, root.childNodes.length)
+      childRange.setEnd(root, root.childNodes.length)
+      child[RENDER_TO_DOM](childRange)
+    }
+
+    replaceContent(root, range);
   }
 }
 
-export class TextWrapper {
-  constructor(text) {
-    this.root = document.createTextNode(text);
+export class TextWrapper extends Component {
+  constructor(content) {
+    super(content)
+    this.type = '#text'
+    this.content = content
+  }
+  get vDom () {
+    return this;
   }
   [RENDER_TO_DOM](range) {
-    range.deleteContents();
-    range.insertNode(this.root);
+    this._range = range;
+
+    let root = document.createTextNode(this.content)
+    replaceContent(root, range)
   }
 }

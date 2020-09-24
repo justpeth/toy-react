@@ -1,3 +1,3 @@
 import ToyReact from './toy-react';
-import App from './app'
-ToyReact.render(<App />, document.getElementById('root'))
+import Game from './app'
+ToyReact.render(<Game />, document.getElementById('root'))
